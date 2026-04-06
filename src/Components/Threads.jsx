@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { Renderer, Program, Mesh, Triangle, Color } from 'ogl';
+import { useEffect, useRef } from "react";
+import { Renderer, Program, Mesh, Triangle, Color } from "ogl";
 
 const vertexShader = `
 attribute vec2 position;
@@ -27,6 +27,7 @@ const int u_line_count = 40;
 const float u_line_width = 7.0;
 const float u_line_blur = 10.0;
 
+// (same shader code unchanged...)
 float Perlin2D(vec2 P) {
     vec2 Pi = floor(P);
     vec4 Pf_Pfmin1 = P.xyxy - vec4(Pi, Pi + 1.0);
@@ -123,14 +124,31 @@ const Threads = ({ color = [1, 1, 1], amplitude = 1, distance = 0, enableMouseIn
   const animationFrameId = useRef();
 
   useEffect(() => {
-    if (!containerRef.current) return;
     const container = containerRef.current;
+    if (!container) return;
 
-    const renderer = new Renderer({ alpha: true });
-    const gl = renderer.gl;
-    gl.clearColor(0, 0, 0, 0);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    // ❗ WebGL support check
+    if (!window.WebGLRenderingContext) {
+      console.warn("WebGL not supported");
+      return;
+    }
+
+    let renderer, gl;
+
+    try {
+      renderer = new Renderer({ alpha: true });
+      gl = renderer.gl;
+
+      if (!gl) {
+        console.warn("WebGL context not available");
+        return;
+      }
+    } catch (e) {
+      console.warn("WebGL init failed:", e);
+      return;
+    }
+
+    // append canvas
     container.appendChild(gl.canvas);
 
     const geometry = new Triangle(gl);
@@ -158,54 +176,27 @@ const Threads = ({ color = [1, 1, 1], amplitude = 1, distance = 0, enableMouseIn
       program.uniforms.iResolution.value.g = clientHeight;
       program.uniforms.iResolution.value.b = clientWidth / clientHeight;
     }
-    window.addEventListener('resize', resize);
+
+    window.addEventListener("resize", resize);
     resize();
 
-    let currentMouse = [0.5, 0.5];
-    let targetMouse = [0.5, 0.5];
-
-    function handleMouseMove(e) {
-      const rect = container.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = 1.0 - (e.clientY - rect.top) / rect.height;
-      targetMouse = [x, y];
-    }
-    function handleMouseLeave() {
-      targetMouse = [0.5, 0.5];
-    }
-    if (enableMouseInteraction) {
-      container.addEventListener('mousemove', handleMouseMove);
-      container.addEventListener('mouseleave', handleMouseLeave);
-    }
-
     function update(t) {
-      if (enableMouseInteraction) {
-        const smoothing = 0.05;
-        currentMouse[0] += smoothing * (targetMouse[0] - currentMouse[0]);
-        currentMouse[1] += smoothing * (targetMouse[1] - currentMouse[1]);
-        program.uniforms.uMouse.value[0] = currentMouse[0];
-        program.uniforms.uMouse.value[1] = currentMouse[1];
-      } else {
-        program.uniforms.uMouse.value[0] = 0.5;
-        program.uniforms.uMouse.value[1] = 0.5;
-      }
       program.uniforms.iTime.value = t * 0.001;
-
       renderer.render({ scene: mesh });
       animationFrameId.current = requestAnimationFrame(update);
     }
+
     animationFrameId.current = requestAnimationFrame(update);
 
     return () => {
       if (animationFrameId.current) cancelAnimationFrame(animationFrameId.current);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener("resize", resize);
 
-      if (enableMouseInteraction) {
-        container.removeEventListener('mousemove', handleMouseMove);
-        container.removeEventListener('mouseleave', handleMouseLeave);
+      if (container.contains(gl.canvas)) {
+        container.removeChild(gl.canvas);
       }
-      if (container.contains(gl.canvas)) container.removeChild(gl.canvas);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+
+      gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [color, amplitude, distance, enableMouseInteraction]);
 
