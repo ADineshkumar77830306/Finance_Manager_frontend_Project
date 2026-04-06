@@ -1,20 +1,121 @@
-<<<<<<< HEAD
-# Finance_Manger_frontend_Project
-=======
-# React + Vite
+# 💰 Finance Manager Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern finance management web application built using React and Vite, designed with a clean UI, smooth animations, and role-based functionality.
+Live demo link : https://finance-manager-frontend-project.vercel.app/
+(note: to check the website)
+---
 
-Currently, two official plugins are available:
+## 🚀 Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* ⚛️ React JS
+* ⚡ Vite
+* 🎨 Tailwind CSS
+* ✨ ShadCN UI
+* 🎭 React Bits (for animations)
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🧠 State Management
 
-## Expanding the ESLint configuration
+* useContext API
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
->>>>>>> 42defa3 (initial commit)
+  * Theme management
+  * Transaction management
+
+---
+
+## 📂 Features
+
+### 🧭 Navigation Tabs
+
+* Home
+* Transactions
+* Insights
+* Settings
+
+---
+
+### 👥 User Roles
+
+* Toggle between **Admin** and **User**
+* Admin:
+
+  * ✅ Can add transactions
+  * ❌ Cannot edit or delete
+* User:
+
+  * View-only access
+
+---
+
+### 💸 Transactions
+
+* View all transaction details
+* Structured and clean UI
+* Managed via Context API
+
+---
+
+### 📊 Insights & Charts
+
+* Chart.js
+* Recharts
+* Visual representation of financial data
+
+---
+
+### 🎨 UI & Animations
+
+* Smooth animations using React Bits
+* Styled using Tailwind + ShadCN
+* Icons via React Icons
+
+---
+
+### 🔔 Notifications
+
+* React Toastify for alerts and notifications
+
+---
+
+### 🔐 Authentication (Mock)
+
+* Login & Register UI implemented
+* Currently logs data to console
+* Can be extended for real backend integration
+
+---
+
+## 📸 Screenshots
+
+(Add your project screenshots here)
+
+---
+
+## 🛠️ Future Improvements
+
+* Backend integration (Node.js / Firebase)
+* Full authentication system
+* Edit/Delete transactions
+* Persistent database
+
+---
+
+## 📦 Installation
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+## 📌 Note
+
+This is a frontend-only project and can be extended into a full-stack application. here i used my minimal potential , but if i get the oppurtunity , i will contribute more!! .  
+
+---
+
+## ⭐ Author
+
+Dinesh Kumar
